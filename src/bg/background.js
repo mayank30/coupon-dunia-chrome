@@ -19,6 +19,7 @@ cache={
 
 	}
 }
+window.currentCoupons="";
 
 function coupon(title,success,url,code){
 	this.title=title;
@@ -44,16 +45,18 @@ var couponfetcher=function(website){
 		});
 	function parse(data){
 		$page=$(data)
-		
+		var numericregex=/(\d+)/;
+
 		$coupons=$page.find(".header-coupons-denomination");
 		$deals=$page.find(".header-coupons-tags");
-		var numericregex=/(\d+)/;
-		var couponsCount=numericregex.exec($coupons.html())[1];
-		var dealsCount=numericregex.exec($deals.html())[1];
-		console.log(couponsCount+" "+dealsCount);
-		if(couponsCount*1>0||dealsCount*1>0){//*1 converts it to a number, so we can compare
+		
+		var couponsCount=numericregex.exec($coupons.html())[1]*1;
+		var dealsCount=numericregex.exec($deals.html())[1]*1;
+		
+		
 			
-		}
+		
+		
 		var coupons=[];
 		var deals=[];
 		$page.find("#activeCoupons").find(".coupon").each(function(data){
@@ -77,36 +80,54 @@ var couponfetcher=function(website){
 				deals.push(d);
 			}
 			cache.push(website,{coupons:coupons,deals:deals});
+			views=chrome.extension.getViews();
 
 		})
 		//console.log(cache)
 	}
 	request.done(parse);
-	function donothing(){}
-	request.fail(donothing);
+	function onFail(){
+
+		chrome.browserAction.setBadgeText({text:""})
+		cache.push(website,{coupons:[],deals:[]});
+	}
+	request.fail(onFail);
 }
 
 var tabHandler={
+ 	processChange:function(tab){
+    		
+   		var parser = document.createElement('a');//To extract the hostname, we create dom element 
+		parser.href = tab.url;
 
+		var regex=/^(www\.)?([^\.]+)/
+		var matches=regex.exec(parser.hostname)//This gives us the hostname, we extract the website name
+		var website=matches[2];
+		function getWebsiteCoupons(site){
+			var coupons=cache.pull(site)
+			if(!coupons){
+				couponfetcher(site)
+				coupons=cache.pull(site);
+			}
+			return coupons;
+			
+		}
+		var coupons=getWebsiteCoupons(website);
+		currentCoupons=coupons;
+		chrome.browserAction.setBadgeText({text:coupons.coupons.length+coupons.deals.length+""})
+			
+  	},
 
-    onTabUpdate:function(tabId,  changeInfo,  tab){
+    onTabUpdate:function(tabId,  changeInfo,  dtab){
+
+    	chrome.tabs.get(tabId,tabHandler.processChange);
 
 
 	},
 	tabChanged:function(activeInfo) {
-		function tabChanged(tab){
-    		
-   		var parser = document.createElement('a');//To extract the hostname, we create dom element 
-		parser.href = tab.url;
 		
-		var regex=/^(www\.)?([^\.]+)/
-		var matches=regex.exec(parser.hostname)//This gives us the hostname, we extract the website name
-		var website=matches[2];
-		couponfetcher(website)
-
-    	}
-    	
-    	chrome.tabs.get(activeInfo.tabId,tabChanged);
+    	console.log(this)	;	
+    	chrome.tabs.get(activeInfo.tabId,tabHandler.processChange);
 	},
 
 	init:function(){
@@ -119,3 +140,9 @@ var tabHandler={
 }
 
 tabHandler.init();
+
+
+function BrowserActionClicked(tab){
+
+}
+chrome.browserAction.onClicked.addListener(BrowserActionClicked)

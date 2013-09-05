@@ -10,11 +10,16 @@
 		font-size: 2em;
 	}
 </style>
-
+<script type="text/javascript" src="../jquery.min.js">
+</script>
 <div id="mainPopup">
-<h1>Hello extensionizr!</h1>
-<p>To shut this popup down, edit the manifest file and remove the "default popup" key. To edit it, just edit ext/browser_action/browser_action.html. The CSS is there, too.</p>
+	<h1 onClick="this.style.visibility='none'">Coupons Duniya!</h1>
+	<div class="coupons">
+Hello
+	</div>
+
 </div>
 
-<script>chrome.tabs.onUpdated.addListener(function(){alert("Hello")})
+<script type="text/javascript" src="browser_main.js">
+
 </script>
