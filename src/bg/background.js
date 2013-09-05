@@ -5,9 +5,39 @@
 // });
 
 
-//example of using a message handler from the inject scripts
-chrome.extension.onMessage.addListener(
-  function(request, sender, sendResponse) {
-  	chrome.pageAction.show(sender.tab.id);
-    sendResponse();
-  });
+//example of using a message handler from the inject scriptst
+
+
+var tabHandler={
+
+
+    onTabUpdate:function(tabId,  changeInfo,  tab){
+
+
+	},
+	tabChanged:function(activeInfo) {
+		function tabChanged(tab){
+    		
+   		var parser = document.createElement('a');
+		parser.href = tab.url;
+		
+		var regex=/^(www\.)?([^\.]+)/
+		var matches=regex.exec(parser.hostname)
+		var website=matches[2];
+		console.log(website)
+
+    	}
+    	
+    	chrome.tabs.get(activeInfo.tabId,tabChanged);
+	},
+
+	init:function(){
+		chrome.tabs.onActivated.addListener(this.tabChanged);
+
+	}
+
+
+
+}
+
+tabHandler.init();
