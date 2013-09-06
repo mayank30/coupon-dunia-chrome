@@ -35,7 +35,7 @@ function deal(title,success,url){
 	this.url=url;
 	this.success=success;
 }
-var couponfetcher=function(website){
+var couponfetcher=function(website,callback){
 
 	var request = $.ajax({
 		  url: "http://www.coupondunia.in/"+website,
@@ -43,20 +43,18 @@ var couponfetcher=function(website){
 		  
 		  dataType: "html"
 		});
+
 	function parse(data){
+		
+
 		$page=$(data)
 		var numericregex=/(\d+)/;
+
 
 		$coupons=$page.find(".header-coupons-denomination");
 		$deals=$page.find(".header-coupons-tags");
 		
-		var couponsCount=numericregex.exec($coupons.html())[1]*1;
-		var dealsCount=numericregex.exec($deals.html())[1]*1;
-		
-		
 			
-		
-		
 		var coupons=[];
 		var deals=[];
 		$page.find("#activeCoupons").find(".coupon").each(function(data){
@@ -79,43 +77,60 @@ var couponfetcher=function(website){
 				
 				deals.push(d);
 			}
-			cache.push(website,{coupons:coupons,deals:deals});
-			views=chrome.extension.getViews();
+			
 
 		})
-		//console.log(cache)
+		cache.push(website,{coupons:coupons,deals:deals});
+		console.log("Callback");
+		callback(website,{coupons:coupons,deals:deals})
+		
 	}
 	request.done(parse);
 	function onFail(){
 
 		chrome.browserAction.setBadgeText({text:""})
 		cache.push(website,{coupons:[],deals:[]});
+		callback(website,{coupons:[],deals:[]})
+
 	}
 	request.fail(onFail);
 }
 
 var tabHandler={
  	processChange:function(tab){
-    		
+    	console.log("Tab Changed or updated");
+
    		var parser = document.createElement('a');//To extract the hostname, we create dom element 
 		parser.href = tab.url;
 
 		var regex=/^(www\.)?([^\.]+)/
 		var matches=regex.exec(parser.hostname)//This gives us the hostname, we extract the website name
 		var website=matches[2];
+
+		function updateBrowserAction(website,coupons){
+			
+			console.log("Calling the update Browser Action");
+
+			window.currentCoupons=coupons;
+			chrome.browserAction.setBadgeText({text:coupons.coupons.length+coupons.deals.length+""})
+			
+		}
 		function getWebsiteCoupons(site){
 			var coupons=cache.pull(site)
 			if(!coupons){
-				couponfetcher(site)
-				coupons=cache.pull(site);
+				couponfetcher(site,updateBrowserAction)
+				
 			}
-			return coupons;
+			else{
+				updateBrowserAction(site,coupons)
+			}
+
+			
 			
 		}
-		var coupons=getWebsiteCoupons(website);
-		window.currentCoupons=coupons;
-		chrome.browserAction.setBadgeText({text:coupons.coupons.length+coupons.deals.length+""})
-			
+		getWebsiteCoupons(website)
+			console.log("Calling getwebsite for" +website);
+		
   	},
 
     onTabUpdate:function(tabId,  changeInfo,  dtab){
@@ -126,7 +141,7 @@ var tabHandler={
 	},
 	tabChanged:function(activeInfo) {
 		
-    	console.log(this)	;	
+    	
     	chrome.tabs.get(activeInfo.tabId,tabHandler.processChange);
 	},
 
