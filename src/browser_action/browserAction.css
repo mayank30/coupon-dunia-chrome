@@ -1,0 +1,68 @@
+body{
+background:url("debut_light.png")
+
+}
+.clear{
+clear:both;
+}
+.coupons{
+
+
+}
+.coupon{
+
+	padding: 20px;
+   margin: 10px;
+   background: #ff0030;
+   color: #fff;
+   font-size: 21px;
+   font-weight: bold;
+   line-height: 1.3em;
+   border: 2px dashed #fff;
+   border-radius: 10px;
+   box-shadow: 0 0 0 4px #ff0030, 2px 1px 6px 4px rgba(10, 10, 0, 0.5);
+   text-shadow: -1px -1px #aa3030;
+   font-weight: normal;
+
+
+}
+
+.deal{
+
+	padding: 20px;
+   margin: 10px;
+   background: #ee82ee;
+   color: #fff;
+   font-size: 21px;
+   font-weight: bold;
+   line-height: 1.3em;
+   border: 2px dashed #fff;
+   border-radius: 10px;
+   box-shadow: 0 0 0 4px #ee82ee, 2px 1px 6px 4px rgba(10, 10, 0, 0.5);
+   text-shadow: -1px -1px #aa3030;
+   font-weight: normal;
+
+
+}
+ a, a:hover{
+	color: #fff;
+	text-decoration: none
+}
+.coupon .title,.deal .title{
+	float:left;
+	
+  white-space: nowrap;
+  overflow: hidden;              /* "overflow" value must be different from "visible" */ 
+width:93%;
+  text-overflow:    ellipsis;
+
+}
+.coupon .success-rate,.deal .success-rate{
+	float:right;
+	width:5%;
+}
+.coupon .code,.deal .code{
+	padding: 10px;
+	text-align: center;
+	border: 3px dashed #ccc; 
+}

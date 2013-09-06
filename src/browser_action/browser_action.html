@@ -1,21 +1,16 @@
 <!doctype html>
-<style type="text/css">
-	#mainPopup {
-		padding: 10px;
-		height: 200px;
-		width: 400px;
-		font-family: Helvetica, Ubuntu, Arial, sans-serif;
-	}
-	h1 {
-		font-size: 2em;
-	}
-</style>
-<script type="text/javascript" src="../jquery.min.js">
-</script>
+<link href="browserAction.css" rel="stylesheet" type="text/css"/>
+
+
+<script type="text/javascript" src="../bg/jquery.min.js"></script>
+
+<script type="text/javascript" src="moustache.js"></script>
+
+
 <div id="mainPopup">
-	<h1 onClick="this.style.visibility='none'">Coupons Duniya!</h1>
-	<div class="coupons">
-Hello
+	<h2 class="site">Coupons Duniya!</h2>
+	<div id="coupons">
+
 	</div>
 
 </div>
@@ -23,3 +18,38 @@ Hello
 <script type="text/javascript" src="browser_main.js">
 
 </script>
+
+
+<script type="text/x-tmpl" id="coupons-template">
+
+	<div class="coupons">
+		<h2>Coupons</h2>
+		{{#coupons}}
+			<div class="coupon">
+				
+				<div class="title"><a href="{{url}}" target="_blank">{{title}}</a></div>
+				<div class="success-rate">{{success}}%</div>
+				<div class="clear"></div>
+				<div class="code">{{code}}</div>
+			</div>
+		{{/coupons}}
+		{{^coupons}}No coupons found :( {{/coupons}}
+
+	</div>
+	<div class="deals">
+	<h2>Deals</h2>
+		{{#deals}}
+			<div class="deal">
+				
+				<div class="title"><a href="{{url}}" target="_blank">{{title}}</a></div>
+				<div class="success-rate">{{success}}%</div>
+				<div class=" 	clear"></div>
+				
+			</div>
+		{{/deals}}
+		{{^deals}}No deals found :( {{/deals}}
+
+	</div>
+
+</script>
+

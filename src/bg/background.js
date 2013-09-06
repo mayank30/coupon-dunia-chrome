@@ -65,7 +65,7 @@ var couponfetcher=function(website){
 
 			var code=$(this).find(".crux .couponTitle").attr("code");
 			
-			var href=$(this).find(".crux a").attr("href");
+			var href=$(this).find(".crux .couponTitle").attr("href");
 
 			var dealbtn=$(this).find(".crux .dealButton");
 			if(!dealbtn.length){
@@ -113,7 +113,7 @@ var tabHandler={
 			
 		}
 		var coupons=getWebsiteCoupons(website);
-		currentCoupons=coupons;
+		window.currentCoupons=coupons;
 		chrome.browserAction.setBadgeText({text:coupons.coupons.length+coupons.deals.length+""})
 			
   	},

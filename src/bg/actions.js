@@ -1,13 +1,13 @@
 var actions={
 	
 	fetchCoupons:function(request,callback){
-		callback(currentCoupons);
+		callback(window.currentCoupons);
 
 	}
 }
 
 function onRequest(request, sender, callback) {
-	alert("onRequest")
+	
        actions[request.action](request,callback);
 
 }
