@@ -1,6 +1,6 @@
 body{
-background:url("debut_light.png")
-
+background:url("debut_light.png");
+width:400px;
 }
 .clear{
 clear:both;
