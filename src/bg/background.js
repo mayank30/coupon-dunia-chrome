@@ -59,7 +59,7 @@ var couponfetcher=function(website,callback){
 		var deals=[];
 		$page.find("#activeCoupons").find(".coupon").each(function(data){
 			var title=$(this).find(".crux .couponTitle").html().trim();
-			var successRate=numericregex.exec($page.find(".couponstatcontainer .stats").html().trim())[1];
+			var successRate=numericregex.exec($(this).find(".couponstatcontainer .stats").html().trim())[1];
 
 			var code=$(this).find(".crux .couponTitle").attr("code");
 			
