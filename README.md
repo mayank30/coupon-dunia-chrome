@@ -11,7 +11,7 @@ http://developer.chrome.com/extensions/getstarted.html#unpacked
 
 This is how it works:
 
-1. BAckground page listens in on tab changes and udpations
+1. Background page listens in on tab changes and udpations
 1. In case of tab changes, we check for the websites coupons and store them in an in-memory object (as a hashmap).
 1. The website coupons are available at coupondunia.in/sitename (flipkart for flipkart.in, dominos for dominoes.co.in ...)
 1. We parse the dom to extract coupons and codes
